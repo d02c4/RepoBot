@@ -1,0 +1,31 @@
+# docker-compose.yml
+version: '3.8'
+services:
+  mariadb:
+    build:
+      context: ./mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: '132432'
+      MYSQL_DATABASE: 'botdata'
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    restart: always
+
+  app1:
+    build:
+      context: ./diplom
+    command: python3 ./news_collector.py
+    depends_on:
+      - mariadb
+    restart: always
+
+  app2:
+    build:
+      context: ./diplom2
+    command: python3 ./run.py
+    depends_on:
+      - mariadb
+    restart: always
+
+volumes:
+  mariadb_data:
